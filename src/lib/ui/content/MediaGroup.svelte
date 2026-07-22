@@ -59,7 +59,9 @@
 				{#each mediaItems.slice(0, 2) as item, index}
 					<ProjectMediaComponent media={item} fillContainer={index > 0 ? 'desktop' : false} />
 				{/each}
-				<ProjectMediaComponent media={mediaItems[3]} />
+				{#if mediaItems[3]}
+					<ProjectMediaComponent media={mediaItems[3]} />
+				{/if}
 			{/if}
 			{#if layout === 'one_half_half'}
 				<ProjectMediaComponent media={mediaItems[0]} />
@@ -71,7 +73,9 @@
 				{#each mediaItems.slice(0, 2) as item, index}
 					<ProjectMediaComponent media={item} fillContainer={index > 0 ? 'desktop' : true} />
 				{/each}
-				<ProjectMediaComponent media={mediaItems[2]} />
+				{#if mediaItems[2]}
+					<ProjectMediaComponent media={mediaItems[2]} />
+				{/if}
 			{/if}
 			{#if layout === 'one_text' || layout === 'text_one'}
 				{#if hasText}
