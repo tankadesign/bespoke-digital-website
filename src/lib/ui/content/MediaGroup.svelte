@@ -77,6 +77,18 @@
 					<ProjectMediaComponent media={mediaItems[2]} />
 				{/if}
 			{/if}
+			{#if layout.startsWith('complex_grid_')}
+				{@const tallMediaIndex =
+					layout === 'complex_grid_1' || layout === 'complex_grid_2' || layout === 'complex_grid_3'
+						? 0
+						: mediaItems.length - 1}
+				{#each mediaItems as item, index}
+					<ProjectMediaComponent
+						media={item}
+						fillContainer={index === tallMediaIndex ? false : true}
+					/>
+				{/each}
+			{/if}
 			{#if layout === 'one_text' || layout === 'text_one'}
 				{#if hasText}
 					<div class="text align-{textAlign}">
@@ -154,6 +166,22 @@
 	}
 
 	@media (max-width: 719px) {
+		.layout_complex_grid_1 .media,
+		.layout_complex_grid_2 .media,
+		.layout_complex_grid_3 .media,
+		.layout_complex_grid_4 .media,
+		.layout_complex_grid_5 .media,
+		.layout_complex_grid_6 .media {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+		.layout_complex_grid_1 .media :global(:nth-child(1)),
+		.layout_complex_grid_2 .media :global(:nth-child(1)),
+		.layout_complex_grid_3 .media :global(:nth-child(1)),
+		.layout_complex_grid_4 .media :global(:last-child),
+		.layout_complex_grid_5 .media :global(:last-child),
+		.layout_complex_grid_6 .media :global(:last-child) {
+			grid-column: 1 / span 2;
+		}
 		.layout_one_two .media :global(:nth-child(1)),
 		.layout_two_one .media :global(:nth-child(3)) {
 			grid-column: 1 / span 2;
@@ -216,6 +244,35 @@
 		}
 		.layout_half_half_one .media :global(:nth-child(3)) {
 			grid-column: 3 / span 2;
+		}
+		.layout_complex_grid_1 .media,
+		.layout_complex_grid_2 .media,
+		.layout_complex_grid_3 .media,
+		.layout_complex_grid_4 .media,
+		.layout_complex_grid_5 .media,
+		.layout_complex_grid_6 .media {
+			grid-template-columns: repeat(4, minmax(0, 1fr));
+			grid-template-rows: repeat(2, minmax(0, 1fr));
+		}
+		.layout_complex_grid_1 .media :global(:nth-child(1)),
+		.layout_complex_grid_2 .media :global(:nth-child(1)),
+		.layout_complex_grid_3 .media :global(:nth-child(1)) {
+			grid-column: 1 / span 2;
+			grid-row: 1 / span 2;
+		}
+		.layout_complex_grid_1 .media :global(:nth-child(4)),
+		.layout_complex_grid_3 .media :global(:nth-child(2)) {
+			grid-column: 3 / span 2;
+		}
+		.layout_complex_grid_4 .media :global(:last-child),
+		.layout_complex_grid_5 .media :global(:last-child),
+		.layout_complex_grid_6 .media :global(:last-child) {
+			grid-column: 3 / span 2;
+			grid-row: 1 / span 2;
+		}
+		.layout_complex_grid_4 .media :global(:nth-child(3)),
+		.layout_complex_grid_6 .media :global(:nth-child(1)) {
+			grid-column: 1 / span 2;
 		}
 		.layout_one_text.hasText .media,
 		.layout_text_one.hasText .media {

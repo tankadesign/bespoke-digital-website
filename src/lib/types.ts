@@ -251,6 +251,12 @@ export interface MediaGroup {
 		| 'four'
 		| 'one_half_half'
 		| 'half_half_one'
+		| 'complex_grid_1'
+		| 'complex_grid_2'
+		| 'complex_grid_3'
+		| 'complex_grid_4'
+		| 'complex_grid_5'
+		| 'complex_grid_6'
 		| 'single'
 		| 'one_text'
 		| 'text_one';

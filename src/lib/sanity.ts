@@ -31,7 +31,7 @@ export function getClient(showDrafts = false) {
 		apiVersion,
 		token: SANITY_TOKEN,
 		useCdn: !showDrafts,
-		perspective: showDrafts ? 'previewDrafts' : 'published'
+		perspective: showDrafts ? 'drafts' : 'published'
 	});
 }
 
