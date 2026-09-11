@@ -18,6 +18,31 @@
 		isTextLayout && Boolean(data.title || (data.description && (data.description as any[]).length))
 	);
 	const collapseNext = $derived(data.collapseMargin);
+
+	// Complex grids: one tall item spans both rows on desktop; some layouts also
+	// have one "wide" item spanning two columns. Everything else is a small tile.
+	const complexGridConfig: Record<string, { tall: number; wide: number }> = {
+		complex_grid_1: { tall: 0, wide: 3 },
+		complex_grid_2: { tall: 0, wide: -1 },
+		complex_grid_3: { tall: 0, wide: 1 },
+		complex_grid_4: { tall: -1, wide: 2 },
+		complex_grid_5: { tall: -1, wide: -1 },
+		complex_grid_6: { tall: -1, wide: 0 }
+	};
+
+	// On mobile the small tiles sit in pairs, so (like one_two / one_half_half) the
+	// first tile of each pair keeps its natural height ('desktop') and the second
+	// stretches to match it (true). The tall and wide items are full width on mobile.
+	function complexGridFill(index: number): boolean | 'desktop' {
+		const config = complexGridConfig[layout] ?? { tall: 0, wide: -1 };
+		const tall = config.tall === -1 ? mediaItems.length - 1 : config.tall;
+		if (index === tall) return false;
+		if (index === config.wide) return 'desktop';
+		const pairIndex = mediaItems.filter(
+			(_, i) => i < index && i !== tall && i !== config.wide
+		).length;
+		return pairIndex % 2 === 0 ? 'desktop' : true;
+	}
 </script>
 
 {#snippet textContent()}
@@ -78,15 +103,8 @@
 				{/if}
 			{/if}
 			{#if layout.startsWith('complex_grid_')}
-				{@const tallMediaIndex =
-					layout === 'complex_grid_1' || layout === 'complex_grid_2' || layout === 'complex_grid_3'
-						? 0
-						: mediaItems.length - 1}
 				{#each mediaItems as item, index}
-					<ProjectMediaComponent
-						media={item}
-						fillContainer={index === tallMediaIndex ? false : true}
-					/>
+					<ProjectMediaComponent media={item} fillContainer={complexGridFill(index)} />
 				{/each}
 			{/if}
 			{#if layout === 'one_text' || layout === 'text_one'}
@@ -180,6 +198,13 @@
 		.layout_complex_grid_4 .media :global(:last-child),
 		.layout_complex_grid_5 .media :global(:last-child),
 		.layout_complex_grid_6 .media :global(:last-child) {
+			grid-column: 1 / span 2;
+		}
+		/* the item that is two columns wide on desktop stays full width on mobile */
+		.layout_complex_grid_1 .media :global(:nth-child(4)),
+		.layout_complex_grid_3 .media :global(:nth-child(2)),
+		.layout_complex_grid_4 .media :global(:nth-child(3)),
+		.layout_complex_grid_6 .media :global(:nth-child(1)) {
 			grid-column: 1 / span 2;
 		}
 		.layout_one_two .media :global(:nth-child(1)),
